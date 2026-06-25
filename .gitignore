@@ -1,1 +1,35 @@
+# Virtual Environment
 .venv/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# IDEs & OS
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+
+# Datasets
+# Bỏ qua tất cả các thư mục chứa từ "dataset"
+*dataset*/
+*dataset_*/
+paper/dataset_NVTS/
+
+# Trừ duy nhất thư mục paper/cropped_dataset/
+!paper/cropped_dataset/
+!paper/cropped_dataset/**
+
+# Models
+*.joblib

@@ -1,0 +1,2 @@
+case,features,feature_keys,n_features,test_accuracy,test_balanced_accuracy,test_macro_precision,test_macro_recall,test_macro_f1,test_weighted_f1,test_feature_extraction_sec,test_predict_seconds,test_inference_time_ms_per_image,test_predict_time_ms_per_image
+Edge Histogram,Edge Histogram,edge_histogram,16,0.6145710928319624,0.590093759065843,0.6273896436101432,0.590093759065843,0.5926186430471717,0.6188522039341713,0.0943381840006623,0.34071343899995554,0.5112239988256378,0.4003683184488315
