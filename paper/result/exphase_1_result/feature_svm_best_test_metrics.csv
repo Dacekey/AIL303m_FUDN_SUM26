@@ -1,0 +1,2 @@
+case,features,test_accuracy,test_balanced_accuracy,test_macro_precision,test_macro_recall,test_macro_f1,test_weighted_f1
+Raw Pixels (Baseline),Raw Pixels (gray),0.9306698002350177,0.8889856377422689,0.9567315005544885,0.8889856377422689,0.9121265035500835,0.9288178283051685
