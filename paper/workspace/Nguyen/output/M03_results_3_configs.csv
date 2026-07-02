@@ -1,0 +1,4 @@
+﻿Mã TN,Bộ đặc trưng,Số chiều (n_features),Val Accuracy (%),Val Macro F1 (%),Thời gian Train (s)
+TN2.1,HOG Gray,900,96.48,95.95,6.33
+TN2.2,HOG YUV,2700,96.36,94.75,25.6
+TN2.3,HOG Gray + Color Hist (HSV),1412,95.87,95.19,9.08
