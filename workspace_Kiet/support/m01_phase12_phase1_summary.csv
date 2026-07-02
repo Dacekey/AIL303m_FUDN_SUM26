@@ -1,0 +1,6 @@
+﻿Phase,Cấu hình,Đặc trưng,Val Accuracy,Val Macro Recall,Val Macro F1,Ghi chú
+Phase 1,Raw Pixels (Baseline),Raw Pixels (gray),94.30%,91.45%,93.40%,Phase 1 chưa lưu per-class val report
+Phase 1,HOG + Color Histogram - gray,HOG (gray) + Color Histogram (HSV),95.51%,91.40%,93.27%,Phase 1 chưa lưu per-class val report
+Phase 1,HOG only - gray,HOG (gray),95.27%,91.18%,92.86%,Phase 1 chưa lưu per-class val report
+Phase 1,HOG only - yuv,HOG (YUV),95.51%,91.17%,92.74%,Phase 1 chưa lưu per-class val report
+Phase 1,HOG + Color Histogram - yuv,HOG (YUV) + Color Histogram (HSV),95.51%,90.18%,92.09%,Phase 1 chưa lưu per-class val report

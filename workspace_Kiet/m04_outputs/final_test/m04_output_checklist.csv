@@ -1,0 +1,15 @@
+﻿group,file,exists,path
+dataset,m04_class_counts.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\dataset\m04_class_counts.csv
+dataset,m04_minority_classes.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\dataset\m04_minority_classes.csv
+validation,m04_validation_results_tn31_tn32_tn33.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\validation\m04_validation_results_tn31_tn32_tn33.csv
+validation,m04_minority_validation_report_by_experiment.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\validation\m04_minority_validation_report_by_experiment.csv
+validation,m04_best_validation_model.joblib,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\validation\m04_best_validation_model.joblib
+validation,m04_best_validation_confusion_matrix.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\validation\m04_best_validation_confusion_matrix.csv
+validation,m04_best_validation_top_confusions.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\validation\m04_best_validation_top_confusions.csv
+validation,m04_final_pipeline_summary.json,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\validation\m04_final_pipeline_summary.json
+final_test,m04_final_test_metrics.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\final_test\m04_final_test_metrics.csv
+final_test,m04_final_test_classification_report.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\final_test\m04_final_test_classification_report.csv
+final_test,m04_final_test_confusion_matrix.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\final_test\m04_final_test_confusion_matrix.csv
+final_test,m04_final_test_top_confusions.csv,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\final_test\m04_final_test_top_confusions.csv
+final_test,m04_final_model.joblib,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\final_test\m04_final_model.joblib
+final_test,m04_final_test_summary.json,True,E:\tai lieu\machine learning\project_final\AIL303m_FUDN_SUM26\workspace_Kiet\m04_outputs\final_test\m04_final_test_summary.json

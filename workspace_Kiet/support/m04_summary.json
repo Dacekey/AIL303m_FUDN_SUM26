@@ -1,0 +1,13 @@
+{
+  "phase3_planned": 120,
+  "phase3_partial_results": 5,
+  "minority_classes": 10,
+  "best_phase3_candidate": "raw_pixels__baseline_0000",
+  "best_phase3_val_macro_f1": 0.9340467369682389,
+  "best_phase3_val_accuracy": 0.9429611650485437,
+  "best_phase2_case": "Edge Histogram",
+  "best_phase2_macro_f1": 0.5875021504230209,
+  "phase2_test_accuracy": 0.6145710928319624,
+  "phase2_test_macro_f1": 0.5926186430471717,
+  "final_test_status": "Chưa thấy file final test Phase 3"
+}

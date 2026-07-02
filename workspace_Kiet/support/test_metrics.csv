@@ -1,0 +1,2 @@
+﻿Case,Features,Test Accuracy,Test Balanced Accuracy,Test Macro Precision,Test Macro Recall,Test Macro F1,Test Weighted F1
+Raw Pixels (Baseline),Raw Pixels (gray),0.9307,0.889,0.9567,0.889,0.9121,0.9288
