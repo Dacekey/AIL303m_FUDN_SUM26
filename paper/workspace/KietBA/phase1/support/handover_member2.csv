@@ -1,0 +1,4 @@
+﻿Nhóm/Class,Lý do,Việc cần làm
+Biển không vuông,Phase 1 resize trực tiếp bằng cv2.resize về 64x64 nên có nguy cơ méo tỉ lệ ảnh.,Kiểm chứng pad_square so với stretch trong M02.
+P.130 <-> P.131a,Đây là cặp nhầm lẫn lớn nhất trong kết quả test Phase 1.,Kiểm tra hình học sau resize và độ rõ của ký hiệu nhỏ bên trong biển.
+P.127_40/50/60/80,Các biển tốc độ khác nhau chủ yếu ở chữ số nhỏ.,So sánh size/resize để xem chữ số có còn đủ rõ hay không.

@@ -1,0 +1,26 @@
+{
+  "mission": "M04 - PCA, Minority Augmentation and Final Evaluation",
+  "status": "completed_final_test",
+  "project": "E:\\tai lieu\\machine learning\\project_final\\AIL303m_FUDN_SUM26",
+  "dataset": "E:\\tai lieu\\machine learning\\project_final\\AIL303m_FUDN_SUM26\\paper\\cropped_dataset",
+  "feature_mode": "hog_gray_color_hist",
+  "image_size": 64,
+  "preprocess_mode": "pad_square",
+  "pca_variance": 0.95,
+  "best_validation_experiment": "TN3.3",
+  "best_validation_macro_f1": 0.9577360704863276,
+  "best_validation_accuracy": 0.9672330097087378,
+  "test_accuracy": 0.9623971797884842,
+  "test_macro_precision": 0.9808169089337803,
+  "test_macro_recall": 0.9438502725579115,
+  "test_macro_f1": 0.9564362130119796,
+  "test_weighted_f1": 0.9614518349557831,
+  "test_inference_ms_per_image": 1.9318776733231922,
+  "outputs": {
+    "final_model": "E:\\tai lieu\\machine learning\\project_final\\AIL303m_FUDN_SUM26\\workspace_Kiet\\m04_outputs\\final_test\\m04_final_model.joblib",
+    "final_test_metrics": "E:\\tai lieu\\machine learning\\project_final\\AIL303m_FUDN_SUM26\\workspace_Kiet\\m04_outputs\\final_test\\m04_final_test_metrics.csv",
+    "final_test_classification_report": "E:\\tai lieu\\machine learning\\project_final\\AIL303m_FUDN_SUM26\\workspace_Kiet\\m04_outputs\\final_test\\m04_final_test_classification_report.csv",
+    "final_test_confusion_matrix": "E:\\tai lieu\\machine learning\\project_final\\AIL303m_FUDN_SUM26\\workspace_Kiet\\m04_outputs\\final_test\\m04_final_test_confusion_matrix.csv",
+    "final_test_top_confusions": "E:\\tai lieu\\machine learning\\project_final\\AIL303m_FUDN_SUM26\\workspace_Kiet\\m04_outputs\\final_test\\m04_final_test_top_confusions.csv"
+  }
+}

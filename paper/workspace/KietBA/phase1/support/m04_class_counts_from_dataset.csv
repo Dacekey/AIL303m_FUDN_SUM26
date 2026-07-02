@@ -1,0 +1,48 @@
+﻿Class,Train,Val,Minority
+B.8a,65,8,False
+Camera,30,4,False
+I.407a,156,19,False
+I.409,20,3,True
+I.434a,170,21,False
+P.102,376,47,False
+P.103a,41,5,False
+P.104,36,4,False
+P.106a_Xe tải,68,8,False
+P.107,171,21,False
+P.111,372,46,False
+P.117_,58,7,False
+P.123a,197,25,False
+P.123b,148,19,False
+P.124a_,84,10,False
+P.124c,176,22,False
+P.124d,23,3,True
+P.127_40,220,27,False
+P.127_50,151,19,False
+P.127_60,367,46,False
+P.127_80,168,21,False
+P.129,44,6,False
+P.130,856,107,False
+P.131a,348,43,False
+P.137,69,9,False
+P.139,60,7,False
+R.301e,16,2,True
+R.302a,363,45,False
+R.303,34,4,False
+R.415a,224,28,False
+S.505a_Xe máy,20,2,True
+S.505a_Xe tải,110,14,False
+S.505a_Xe tải và công,21,3,True
+W.201a,145,18,False
+W.201b,96,12,False
+W.203c,23,3,True
+W.205a,26,3,True
+W.205b,37,5,False
+W.205c,17,2,True
+W.207,204,26,False
+W.210,32,4,False
+W.221b,104,13,False
+W.224,249,31,False
+W.225,28,4,True
+W.239b_,21,3,True
+W.245a,297,37,False
+W.246a,64,8,False

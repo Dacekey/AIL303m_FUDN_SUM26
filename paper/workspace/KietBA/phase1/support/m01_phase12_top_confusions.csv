@@ -1,0 +1,25 @@
+﻿Phase,Class thật,Class dự đoán,Số lần nhầm
+Phase 1,P.130,P.131a,8
+Phase 1,W.224,P.130,5
+Phase 1,P.131a,P.130,4
+Phase 1,P.127_80,P.127_60,3
+Phase 1,W.207,W.224,2
+Phase 1,P.103a,P.127_80,1
+Phase 1,P.102,W.245a,1
+Phase 1,P.103a,P.127_40,1
+Phase 1,Camera,P.130,1
+Phase 1,I.409,P.127_40,1
+Phase 1,P.124a_,P.127_80,1
+Phase 1,P.124a_,P.123a,1
+Phase 2,P.130,P.102,17
+Phase 2,P.131a,P.130,14
+Phase 2,R.302a,P.102,13
+Phase 2,P.130,P.131a,10
+Phase 2,P.124c,P.102,7
+Phase 2,P.131a,P.102,7
+Phase 2,P.111,P.130,6
+Phase 2,W.224,W.245a,5
+Phase 2,P.127_60,P.127_50,4
+Phase 2,P.127_60,P.127_80,4
+Phase 2,P.127_60,P.130,4
+Phase 2,P.127_40,P.127_50,4

@@ -1,0 +1,7 @@
+﻿Hạng mục,Giá trị,Nhận xét
+Số cấu hình Phase 3 đã lên kế hoạch,120,Lấy từ phase3_search_plan.csv
+Số cấu hình Phase 3 đã có kết quả,5,"Hiện mới là validation partial, chưa phải final test"
+Best partial Phase 3 theo Val Macro F1,raw_pixels__baseline_0000,Raw Pixels (Baseline) - Val Macro F1 93.40%
+Class thiểu số cần augmentation,10,Điều kiện: train support < 30
+SMOTE,Không dùng,"M04 yêu cầu augmentation trực tiếp trên ảnh, tránh SMOTE trên vector HOG"
+Test final,Chưa thấy file final test Phase 3,Chỉ mở test sau khi chốt best config trên validation

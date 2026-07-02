@@ -1,0 +1,4 @@
+﻿Bước,Ý nghĩa
+StandardScaler,Chuẩn hóa feature trước khi PCA và SVM
+PCA(n_components=0.95),Giảm số chiều nhưng giữ khoảng 95% phương sai
+"SVC(kernel='rbf', C=10.0, gamma='scale', class_weight='balanced')","Classifier chính, có class_weight để giảm ảnh hưởng mất cân bằng class"

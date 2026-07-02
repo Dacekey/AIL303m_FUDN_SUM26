@@ -1,0 +1,14 @@
+{
+  "best_val_case": "Raw Pixels (Baseline)",
+  "best_val_accuracy": 0.9429611650485437,
+  "best_val_macro_f1": 0.9340467369682389,
+  "best_val_weighted_f1": 0.9423763848356087,
+  "best_test_case": "Raw Pixels (Baseline)",
+  "best_test_accuracy": 0.9306698002350177,
+  "best_test_macro_f1": 0.9121265035500835,
+  "minority_count_train_lt_30": 10,
+  "total_classes": 47,
+  "total_train": 6605,
+  "total_val": 824,
+  "total_test": 851
+}

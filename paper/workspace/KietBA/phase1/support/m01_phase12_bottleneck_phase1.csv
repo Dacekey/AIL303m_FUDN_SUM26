@@ -1,0 +1,11 @@
+﻿Class ID,Train,Val Support,Recall Val (%),F1 Val (%),Chẩn đoán
+R.301e,16,2,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+W.205c,17,2,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+I.409,20,3,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+S.505a_Xe máy,20,2,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+S.505a_Xe tải và công,21,3,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+W.239b_,21,3,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+P.124d,23,3,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+W.203c,23,3,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+W.205a,26,3,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
+W.225,28,4,N/A,N/A,Phase 1 chưa có per-class report; xác định theo support < 30
