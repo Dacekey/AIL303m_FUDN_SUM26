@@ -1,0 +1,2 @@
+﻿stage,experiment,kernel,degree,C,gamma,class_weight,val_accuracy,val_macro_f1,test_accuracy,test_macro_precision,test_macro_recall,test_macro_f1,test_weighted_f1,test_inference_ms_per_image,support_vectors,note
+Phase 2-New,Best Tuned SVM Final,linear,,0.1,N/A,None,0.9672330097087378,0.9730035022662098,0.9612220916568742,0.9751468225483677,0.9561768657793877,0.9629120857089248,0.9609361966020151,1.5194648649701115,4514,Final test evaluated once only after validation-based selection
