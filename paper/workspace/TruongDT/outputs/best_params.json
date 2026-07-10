@@ -1,0 +1,24 @@
+{
+    "KNN": {
+        "n_neighbors": 5
+    },
+    "SVC (RBF)": {
+        "C": 10
+    },
+    "Random Forest": {
+        "max_depth": null
+    },
+    "LightGBM": {
+        "learning_rate": 0.01,
+        "n_estimators": 100
+    },
+    "Logistic Regression": {
+        "C": 0.1
+    },
+    "MLP": {
+        "alpha": 0.001,
+        "hidden_layer_sizes": [
+            100
+        ]
+    }
+}

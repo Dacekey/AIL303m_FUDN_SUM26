@@ -1,0 +1,7 @@
+Model,Train Time (s),Inference Speed (ms/image),Accuracy,Macro F1,Minority Recall (%)
+SVC (RBF),3.5868,2.452,0.9577,0.9537,86.6667
+Random Forest,2.6118,0.031,0.8578,0.8474,75.0
+LightGBM,40.4803,0.0373,0.8778,0.867,80.8333
+Logistic Regression,1.2973,0.0027,0.9577,0.9482,89.1667
+KNN,0.0117,1.8068,0.9483,0.9423,87.5
+MLP,2.9231,0.0018,0.9518,0.9362,87.5
