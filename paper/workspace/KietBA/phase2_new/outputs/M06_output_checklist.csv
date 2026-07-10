@@ -1,0 +1,11 @@
+﻿artifact,exists,size_bytes
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\M06_svm_finetuning_results.csv,True,21039
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\models\M06_best_tuned_svm_model.joblib,True,28197211
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\figures\M06_grid_search_heatmap.png,True,339657
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\M06_final_test_confusion_matrix.csv,True,5231
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\figures\M06_final_test_confusion_matrix.png,True,1922593
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\M06_final_test_classification_report.csv,True,2138
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\reports\M06_final_test_classification_report.txt,True,3277
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\reports\M06_final_test_classification_report.md,True,3333
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\reports\M06_svm_finetuning_insights.md,True,4068
+E:\machine learing\final_project\AIL303m_FUDN_SUM26\paper\workspace\KietBA\phase2_new\outputs\M06_output_checklist.csv,False,0

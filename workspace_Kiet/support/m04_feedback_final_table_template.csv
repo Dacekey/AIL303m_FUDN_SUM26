@@ -1,0 +1,4 @@
+﻿Mã TN,Cấu hình,Số chiều sau PCA,Val Accuracy,Val Macro F1,Inference ms/ảnh,Nhận xét
+TN3.1,Baseline từ M03,...,...,...,...,Mốc so sánh
+TN3.2,PCA 95%,...,...,...,...,Kiểm tra tốc độ
+TN3.3,PCA + Minority Augmentation,...,...,...,...,Kiểm tra recall class hiếm

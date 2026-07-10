@@ -1,0 +1,5 @@
+﻿Phase,Cấu hình,Đặc trưng,Val Accuracy,Val Macro Recall,Val Macro F1,Ghi chú
+Phase 2,Edge Histogram,Edge Histogram,64.20%,60.95%,58.75%,Có per-class val classification report
+Phase 2,Gabor,Gabor,59.34%,69.95%,58.74%,Có per-class val classification report
+Phase 2,LBP,LBP,37.99%,37.20%,30.74%,Có per-class val classification report
+Phase 2,Hu Moments,Hu Moments,31.43%,36.57%,25.11%,Có per-class val classification report
