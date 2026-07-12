@@ -1,4 +1,0 @@
-﻿Người nhận,Nội dung,Trạng thái
-Trưởng nhóm / Member 1,Bảng kết quả TN3.1/TN3.2/TN3.3 và kết quả test final,Chưa đủ vì thiếu final test
-Báo cáo tổng hợp,Kết luận PCA có giảm chiều mà giữ F1 hay không,Cần chạy đủ cấu hình
-Báo cáo tổng hợp,Kết luận augmentation có cải thiện recall class thiểu số hay không,Cần classification_report theo từng class

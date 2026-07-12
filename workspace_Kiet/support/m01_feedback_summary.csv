@@ -1,7 +1,0 @@
-﻿Hạng mục,Giá trị,Ghi chú
-Per-class validation report,Chưa có,exphase_1 chưa lưu val_classification_report nên Recall/F1 class đang là N/A
-Best validation case,Raw Pixels (Baseline),Val Macro F1 = 93.40%
-Best test accuracy,93.07%,Accuracy tổng thể cao nhưng chưa đủ cho M01
-Best test Macro F1,91.21%,Metric cân bằng theo từng class
-Class support < 30,10,Ứng viên bottleneck/augmentation
-Nhóm class nhầm nhiều,3,"Không chỉ class ít ảnh, còn class xuất hiện nhiều trong top confusion"

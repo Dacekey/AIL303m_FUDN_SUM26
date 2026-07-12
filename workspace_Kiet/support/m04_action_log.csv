@@ -1,7 +1,0 @@
-﻿Bước,Trạng thái,Bằng chứng,Kết quả
-Nhận danh sách class thiểu số từ M01,Hoàn thành,minority_classes.csv / cropped_dataset,10 class có train < 30
-Nhận baseline/feature từ M03,Cần xác nhận,feature_svm_phase2_results.csv,Phase 2 hiện có Edge/Gabor/LBP/Hu; cần xác nhận feature chiến thắng chính thức của M03
-Kiểm tra Phase 3 partial,Hoàn thành,phase3_validation_results_partial.csv,Đã có 5 kết quả validation partial
-Thiết lập PCA 95%,Cần hoàn thiện,M04 mission,Cần chạy đủ TN3.2 với best feature chính thức
-Thiết lập Minority Augmentation,Cần hoàn thiện,M04 mission + minority list,"Augmentation phải làm trên ảnh, không dùng SMOTE"
-Chạy test final đúng 1 lần,Chưa làm,Chưa thấy file final test Phase 3,Chỉ làm sau khi chọn model tốt nhất bằng validation

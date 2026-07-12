@@ -1,4 +1,0 @@
-﻿Mã TN,Cấu hình,Mục đích
-TN3.1,"Không PCA, không Augmentation",Làm baseline so sánh
-TN3.2,PCA 95%,Kiểm tra PCA có giảm số chiều và tăng tốc không
-TN3.3,PCA + Minority Augmentation,Kiểm tra augmentation có cải thiện class hiếm không

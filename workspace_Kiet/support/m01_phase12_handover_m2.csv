@@ -1,4 +1,0 @@
-﻿Nhóm/Class,Lý do,Việc cần làm
-Biển không vuông,"Phase 1 resize trực tiếp 64x64, Phase 2 vẫn có nhiều confusion",Kiểm chứng pad_square vs stretch
-P.127_40/50/60/80,Nhầm biển tốc độ trong Phase 2,Kiểm tra resolution/resize để giữ rõ chữ số
-P.130/P.131a và nhóm P.102,Nhóm class hút nhầm nhiều trong Phase 2,Kiểm tra feature có đủ phân biệt chi tiết ký hiệu hay không

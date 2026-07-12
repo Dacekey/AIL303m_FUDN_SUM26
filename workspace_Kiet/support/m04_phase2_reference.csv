@@ -1,5 +1,0 @@
-﻿Cấu hình,Đặc trưng,Số chiều,Accuracy,Macro F1,Inference ms/ảnh
-Edge Histogram,Edge Histogram,16,0.642,0.5875,0.5181
-Gabor,Gabor,8,0.5934,0.5874,1.0651
-LBP,LBP,10,0.3799,0.3074,1.1532
-Hu Moments,Hu Moments,7,0.3143,0.2511,0.4392

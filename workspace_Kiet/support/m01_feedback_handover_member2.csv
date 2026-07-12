@@ -1,5 +1,0 @@
-﻿Nhóm/Class,Lý do,Việc cần làm
-Biển không vuông,Resize trực tiếp 64x64 có nguy cơ méo tỉ lệ,Kiểm chứng pad_square vs stretch
-"P.130, P.131a",Cặp nhầm lớn nhất trong test confusion,Kiểm tra chi tiết ký hiệu nhỏ sau resize
-P.127_40/50/60/80,Khác nhau chủ yếu ở chữ số,Kiểm tra size/resize để giữ rõ chữ số
-"W.207, W.224",Nhóm cảnh báo nhầm nhau,Kiểm tra hình học và feature biên/shape

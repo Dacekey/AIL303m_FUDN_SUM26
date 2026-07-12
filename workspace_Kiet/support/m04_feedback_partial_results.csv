@@ -1,6 +1,0 @@
-﻿Mã ứng viên,Cấu hình,Feature,Size,Preprocess,Augmentation,PCA,Số chiều,Val Accuracy,Val Macro F1,Inference ms/ảnh
-raw_pixels__baseline_0000,Raw Pixels (Baseline),raw_gray,64,stretch,none,Không,4096,0.9430,0.9340,14.2068
-raw_pixels__baseline_0004,Raw Pixels (Baseline),raw_gray,32,pad_square,minority_light,Không,1024,0.9260,0.9102,4.5694
-raw_pixels__baseline_0003,Raw Pixels (Baseline),raw_gray,128,stretch,none,0.95,16384,0.8799,0.8647,1.0562
-raw_pixels__baseline_0002,Raw Pixels (Baseline),raw_gray,48,pad_square,none,0.95,2304,0.6772,0.7142,0.7015
-raw_pixels__baseline_0001,Raw Pixels (Baseline),raw_gray,48,pad_square,none,0.95,2304,0.7597,0.6571,0.8614

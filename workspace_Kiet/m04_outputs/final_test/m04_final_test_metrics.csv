@@ -1,2 +1,0 @@
-﻿best_experiment_id,best_experiment_name,feature_mode,image_size,preprocess_mode,pca_variance,test_samples,test_accuracy,test_macro_precision,test_macro_recall,test_macro_f1,test_weighted_f1,test_inference_ms_per_image
-TN3.3,PCA 95% + Minority Augmentation,hog_gray_color_hist,64,pad_square,0.95,851,0.9623971797884842,0.9808169089337803,0.9438502725579115,0.9564362130119796,0.9614518349557831,1.9318776733231922

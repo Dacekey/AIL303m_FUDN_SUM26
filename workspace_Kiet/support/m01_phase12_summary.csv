@@ -1,6 +1,0 @@
-﻿Hạng mục,Giá trị,Ghi chú
-Phase 1,Raw Pixels (Baseline),Best Val Macro F1 93.40%; chưa có per-class report
-Phase 2,Edge Histogram,Best Phase 2 Macro F1 58.75%; có per-class report
-Bottleneck Phase 2,28,Class có Recall/F1 < 60% hoặc train support < 30
-Minority support,10,Class có train < 30
-Kết luận,Cần dùng cả Phase 1 và Phase 2,Phase 2 cung cấp Recall/F1 thật theo từng class
