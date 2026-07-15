@@ -1,0 +1,7 @@
+﻿Mã TN,Kích thước,Chế độ Resize,pixels_per_cell,Số chiều HOG,Val Accuracy (%),Val Macro F1 (%),Thời gian Train (s)
+TN1.1,32x32,stretch,"(4, 4)",1764,95.15,92.16,11.59
+TN1.2,32x32,pad_square,"(4, 4)",1764,94.9,92.19,12.14
+TN1.3,48x48,stretch,"(8, 8)",900,96.48,95.95,4.55
+TN1.4,48x48,pad_square,"(8, 8)",900,96.12,94.56,4.59
+TN1.5,64x64,stretch,"(8, 8)",1764,95.87,94.04,10.15
+TN1.6,64x64,pad_square,"(8, 8)",1764,95.51,93.44,10.22
