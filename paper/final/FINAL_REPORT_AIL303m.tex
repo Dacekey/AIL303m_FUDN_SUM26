@@ -1,0 +1,1402 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,top=2.3cm,bottom=2.3cm,left=2.6cm,right=2.4cm,headheight=17pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\definecolor{FPTBlue}{HTML}{1F4E79}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{longtable,booktabs,array,calc}
+\usepackage{ragged2e}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{microtype}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xurl}
+\usepackage[hidelinks,unicode]{hyperref}
+\usepackage{bookmark}
+\usepackage{etoolbox}
+
+\hypersetup{
+  pdftitle={Báo cáo cuối kỳ AIL303m - Nhận diện biển báo giao thông Việt Nam},
+  pdfsubject={HOG, HSV Histogram, PCA và Linear SVM},
+  pdfcreator={XeLaTeX},
+  colorlinks=false
+}
+
+\renewcommand{\contentsname}{MỤC LỤC}
+\setcounter{secnumdepth}{-1}
+\setcounter{tocdepth}{2}
+\setlength{\parindent}{1.2cm}
+\setlength{\parskip}{0.25em}
+\setlength{\emergencystretch}{4em}
+\onehalfspacing
+\justifying
+
+\titleformat{\section}
+  {\Large\bfseries\color{FPTBlue}}{}{0pt}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{FPTBlue}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{1.5em}{0.7em}
+\titlespacing*{\subsection}{0pt}{1.1em}{0.45em}
+
+\setlist[itemize]{leftmargin=1.0cm,itemsep=0.2em,topsep=0.3em}
+\setlist[enumerate]{leftmargin=1.0cm,itemsep=0.2em,topsep=0.3em}
+\AtBeginEnvironment{longtable}{\small\setlength{\tabcolsep}{4pt}}
+\captionsetup{font=small,labelfont=bf,justification=centering}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small\itshape BÁO CÁO CUỐI KỲ - NHẬN DIỆN BIỂN BÁO GIAO THÔNG VIỆT NAM}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Pandoc compatibility helpers.
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>0.82\textheight 0.82\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\urlstyle{tt}
+\sloppy
+
+\begin{document}
+\begin{titlepage}
+  \centering
+  {\large\bfseries TRƯỜNG ĐẠI HỌC FPT\par}
+  \vspace{0.25cm}
+  {\large\bfseries FPT UNIVERSITY ĐÀ NẴNG\par}
+  \vfill
+  {\Large\bfseries BÁO CÁO CUỐI KỲ\par}
+  \vspace{0.8cm}
+  {\LARGE\bfseries NHẬN DIỆN BIỂN BÁO GIAO THÔNG VIỆT NAM\par}
+  \vspace{0.35cm}
+  {\Large\bfseries BẰNG CÁC PHƯƠNG PHÁP TRÍCH XUẤT ĐẶC TRƯNG VÀ MÔ HÌNH HỌC MÁY\par}
+  \vfill
+  \begin{tabular}{@{}p{0.34\textwidth}p{0.54\textwidth}@{}}
+    \textbf{Môn học:} & AIL303m \\
+    \textbf{Học kỳ:} & Summer 2026 \\
+    \textbf{Giảng viên hướng dẫn:} & 	Võ Quốc Trình \\
+    \textbf{Nhóm thực hiện:} & 6\\
+    \textbf{Danh sách thành viên:} & Lê Khôi Nguyên (SE200064), 
+    Bùi	Anh	Kiệt (DE200465), 
+    Trương Phước Nguyên (DE190562), 
+    Phan Hữu Nhật Trường (DE200114) \\
+  \end{tabular}
+  \vfill
+  {\large Đà Nẵng, tháng 7 năm 2026\par}
+\end{titlepage}
+
+\section*{TÓM TẮT}\addcontentsline{toc}{section}{TÓM TẮT}
+
+Báo cáo trình bày quá trình xây dựng, kiểm chứng và tối ưu một hệ thống
+phân loại biển báo giao thông Việt Nam trên bộ dữ liệu NVTS gồm 47 lớp.
+Bài toán có ba thách thức nổi bật: nhiều lớp có hình dạng và màu sắc gần
+giống nhau, ảnh thực tế chịu ảnh hưởng của mờ, chiếu sáng và biến dạng
+góc nhìn, và phân bố lớp mất cân bằng nghiêm trọng khi 10 lớp có dưới 30
+ảnh train. Mục tiêu của dự án là đồng thời đạt hiệu năng phân loại cao,
+cải thiện khả năng nhận diện lớp hiếm và duy trì độ trễ thấp trên nền
+tảng học máy cổ điển, không phụ thuộc vào mô hình học sâu cồng kềnh.
+Pipeline cuối cùng chuẩn hóa ảnh về 64×64 bằng pad\_square; trích xuất
+HOG trên ảnh xám để mô tả hình dạng và cạnh; xây dựng Color Histogram
+trong không gian HSV để mô tả màu; dung hợp hai đặc trưng; chuẩn hóa
+bằng StandardScaler; giảm chiều bằng PCA giữ 95\% phương sai; tăng cường
+dữ liệu trực tiếp trên ảnh cho các lớp thiểu số; và phân loại bằng SVC
+kernel tuyến tính. Sau các ablation về kích thước ảnh, không gian màu,
+PCA và augmentation, dự án benchmark sáu họ mô hình và khảo sát các
+kernel SVM. Cấu hình cuối là SVC(kernel="linear", C=0,1,
+class\_weight=None). Trên tập test 851 ảnh, mô hình đạt Accuracy
+96,12\%, Macro Precision 97,51\%, Macro Recall 95,62\%, Macro F1 96,29\%
+và Weighted F1 96,09\%. Thời gian 1,52 ms/ảnh là độ trễ của bước phân
+loại trên vector đặc trưng đã được xử lý, không phải latency end-to-end.
+So với RBF ở Phase 1, Linear SVM tăng Macro F1 0,65 điểm phần trăm và
+Macro Recall 1,23 điểm phần trăm, đồng thời giảm 817 support vector. Kết
+quả cho thấy một pipeline đặc trưng được thiết kế phù hợp có thể tạo ra
+không gian phân loại chất lượng cao, trong đó mô hình tuyến tính vừa
+cạnh tranh về hiệu năng vừa thuận lợi cho triển khai tài nguyên hạn chế.
+
+\textbf{Từ khóa:} \emph{nhận diện biển báo giao thông, HOG, HSV
+Histogram, PCA, mất cân bằng lớp, Linear SVM, học máy truyền thống.}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Thông điệp chính}
+
+Kết quả tốt nhất không đến từ việc tăng độ phức tạp của mô hình, mà đến
+từ sự phối hợp giữa biểu diễn hình dạng, màu sắc, giảm chiều và quy
+trình lựa chọn mô hình dựa trên Macro F1.
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\clearpage
+\tableofcontents
+\clearpage
+\section*{DANH MỤC TỪ VIẾT TẮT}\addcontentsline{toc}{section}{DANH MỤC TỪ VIẾT TẮT}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Viết tắt}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Nội dung}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+ADAS & Advanced Driver Assistance Systems - Hệ thống hỗ trợ người lái
+nâng cao \\
+HOG & Histogram of Oriented Gradients \\
+HSV & Hue - Saturation - Value \\
+PCA & Principal Component Analysis \\
+SVM/SVC & Support Vector Machine / Support Vector Classifier \\
+RBF & Radial Basis Function \\
+KNN & K-Nearest Neighbors \\
+MLP & Multi-layer Perceptron \\
+NVTS & Vietnamese Traffic Sign Dataset \\
+\end{longtable}
+
+\section{1. GIỚI THIỆU}\label{giux1edbi-thiux1ec7u}
+
+\subsection{1.1. Bối cảnh nghiên
+cứu}\label{bux1ed1i-cux1ea3nh-nghiuxean-cux1ee9u}
+
+Nhận diện biển báo giao thông là một thành phần quan trọng trong các hệ
+thống hỗ trợ người lái, giám sát giao thông và nền tảng giao thông thông
+minh. Một hệ thống đáng tin cậy phải phân biệt được nhiều loại biển có
+hình dạng, màu sắc và biểu tượng gần giống nhau, đồng thời duy trì tốc
+độ xử lý đủ nhanh trong điều kiện ảnh có thể bị mờ, thiếu sáng, lệch
+phối cảnh, che khuất hoặc suy giảm độ phân giải. Các nghiên cứu trước
+cho thấy đặc trưng hình dạng như HOG có khả năng biểu diễn tốt cấu trúc
+cạnh của biển báo, trong khi thông tin màu giúp phân biệt các nhóm biển
+cấm, cảnh báo và chỉ dẫn {[}2{]}, {[}3{]}.
+
+Học sâu hiện là hướng chủ đạo trong nhiều bài toán thị giác máy tính,
+nhưng thường cần lượng dữ liệu gán nhãn lớn, tài nguyên huấn luyện cao
+và quá trình giải thích mô hình phức tạp hơn. Trong phạm vi môn AIL303m
+và mục tiêu xây dựng một hệ thống nhẹ, dự án lựa chọn classical computer
+vision kết hợp machine learning. Cách tiếp cận này cho phép đánh giá
+riêng tác động của tiền xử lý, đặc trưng, giảm chiều và bộ phân loại;
+đồng thời phù hợp với các môi trường không có GPU.
+
+\subsection{1.2. Phát biểu bài toán và phạm
+vi}\label{phuxe1t-biux1ec3u-buxe0i-touxe1n-vuxe0-phux1ea1m-vi}
+
+Đầu vào của hệ thống là một ảnh đã được crop, trong đó mỗi ảnh chứa một
+biển báo giao thông. Nhiệm vụ là gán ảnh vào một trong 47 lớp của bộ dữ
+liệu NVTS. Phạm vi hiện tại là phân loại biển báo, chưa bao gồm bước
+phát hiện vị trí biển trong ảnh đường phố hoàn chỉnh. Vì vậy, kết quả
+của báo cáo phản ánh năng lực nhận diện trên ảnh đã crop và không được
+diễn giải như hiệu năng end-to-end của một hệ thống phát hiện - nhận
+diện hoàn chỉnh.
+
+Dữ liệu gồm 6.605 ảnh train, 824 ảnh validation và 851 ảnh test. Thách
+thức quan trọng là mất cân bằng lớp: 10 lớp có dưới 30 ảnh train, trong
+đó R.301e chỉ có 16 ảnh và W.205c có 17 ảnh. Nếu chỉ tối ưu Accuracy, mô
+hình có thể ưu tiên các lớp phổ biến và vẫn đạt tỷ lệ đúng cao dù bỏ sót
+lớp hiếm. Vì vậy, Macro F1 được chọn làm metric chính.
+
+\subsection{1.3. Mục tiêu nghiên
+cứu}\label{mux1ee5c-tiuxeau-nghiuxean-cux1ee9u}
+
+\begin{itemize}
+\item
+  Tìm cấu hình tiền xử lý ảnh giữ được hình học đặc trưng của biển báo
+  và có chi phí tính toán hợp lý.
+\item
+  Xây dựng biểu diễn kết hợp thông tin hình dạng và màu sắc bằng HOG
+  Gray và HSV Color Histogram.
+\item
+  Đánh giá tác động của StandardScaler và PCA đối với hiệu năng, số
+  chiều và độ trễ.
+\item
+  Cải thiện khả năng nhận diện lớp hiếm bằng tăng cường dữ liệu trực
+  tiếp trên ảnh train.
+\item
+  Benchmark nhiều họ mô hình học máy và tinh chỉnh SVM để tìm cấu hình
+  cuối cùng tốt nhất.
+\item
+  Đánh giá mô hình bằng Accuracy, Macro Precision, Macro Recall, Macro
+  F1, Weighted F1 và thời gian suy luận.
+\end{itemize}
+
+\subsection{1.4. Câu hỏi nghiên
+cứu}\label{cuxe2u-hux1ecfi-nghiuxean-cux1ee9u}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Kết hợp HOG và HSV Histogram có tạo ra biểu diễn hiệu quả hơn khi xét
+  trong pipeline hoàn chỉnh hay không?
+\item
+  PCA có thể giảm mạnh số chiều mà vẫn duy trì hoặc cải thiện Macro F1
+  hay không?
+\item
+  Tăng cường dữ liệu cho lớp hiếm có cải thiện Macro Recall và Macro F1
+  hay không?
+\item
+  Sau khi đặc trưng được chuẩn hóa và giảm chiều, mô hình tuyến tính hay
+  phi tuyến phù hợp hơn?
+\item
+  Độ trễ được báo cáo có ý nghĩa như thế nào đối với khả năng triển khai
+  thời gian thực?
+\end{enumerate}
+
+\subsection{1.5. Đóng góp chính}\label{ux111uxf3ng-guxf3p-chuxednh}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\item
+  Một pipeline hoàn chỉnh gồm 64×64 pad\_square, HOG Gray, HSV
+  Histogram, StandardScaler, PCA 95\%, minority augmentation và Linear
+  SVM.
+\item
+  Một quy trình thực nghiệm hai giai đoạn: Phase 1 khóa mô hình để đánh
+  giá feature engineering; Phase 2 benchmark và tuning mô hình.
+\item
+  Một giải pháp xử lý lớp hiếm bằng augmentation ảnh 2D, bổ sung 430 ảnh
+  train mà không nội suy trực tiếp trong không gian HOG.
+\item
+  Một phân tích đầy đủ về trade-off giữa Accuracy, Macro Precision,
+  Macro Recall, Macro F1, độ trễ và số support vector.
+\item
+  Một phần audit khoa học chỉ rõ giới hạn của protocol test, latency và
+  sự chưa thống nhất của số chiều đặc trưng trong các artifact.
+\end{enumerate}
+
+\section{2. CƠ SỞ LÝ THUYẾT VÀ NGHIÊN CỨU LIÊN
+QUAN}\label{cux1a1-sux1edf-luxfd-thuyux1ebft-vuxe0-nghiuxean-cux1ee9u-liuxean-quan}
+
+\subsection{2.1. Pipeline nhận diện biển báo bằng đặc trưng thủ
+công}\label{pipeline-nhux1eadn-diux1ec7n-biux1ec3n-buxe1o-bux1eb1ng-ux111ux1eb7c-trux1b0ng-thux1ee7-cuxf4ng}
+
+Pipeline truyền thống cho nhận diện biển báo thường gồm tiền xử lý,
+trích xuất đặc trưng và phân loại. Chất lượng biểu diễn ảnh quyết định
+đáng kể đến khả năng phân tách của mô hình. Với biển báo, hai nguồn
+thông tin quan trọng là hình dạng - cạnh và màu sắc. HOG mô tả cấu trúc
+gradient; histogram màu mô tả phân bố sắc độ; bộ phân loại sau đó hoạt
+động trên vector đặc trưng thay vì pixel thô.
+
+\subsection{2.2. Histogram of Oriented
+Gradients}\label{histogram-of-oriented-gradients}
+
+HOG do Dalal và Triggs giới thiệu để mô tả phân bố hướng gradient trong
+các vùng cục bộ {[}2{]}. Ảnh được chia thành các cell; mỗi cell tích lũy
+histogram của hướng gradient, có trọng số theo độ lớn gradient; các cell
+lân cận được chuẩn hóa theo block. HOG bền vững hơn pixel thô trước một
+số thay đổi chiếu sáng và đặc biệt phù hợp với biển báo vì chúng có
+đường viền mạnh, hình học rõ và biểu tượng tương phản cao.
+
+Trong dự án, HOG được trích xuất trên ảnh grayscale với orientations=9,
+pixels\_per\_cell=(8,8), cells\_per\_block=(2,2) và block\_norm=L2-Hys.
+Các thông số này được dùng làm mô tả cấu hình; tuy nhiên số chiều tổng
+1.812 trong artifact M04 chưa khớp hoàn toàn với phép tính lý thuyết từ
+các tham số được ghi lại. Báo cáo giữ nguyên giá trị artifact và đưa vấn
+đề này vào phần hạn chế thay vì tự suy diễn.
+
+\subsection{2.3. Color Histogram trong không gian
+HSV}\label{color-histogram-trong-khuxf4ng-gian-hsv}
+
+Không gian HSV tách sắc độ Hue khỏi độ bão hòa Saturation và độ sáng
+Value. Điều này thuận lợi khi mô tả màu biển báo vì các nhóm biển thường
+tuân theo quy ước màu tương đối ổn định: đỏ cho nhiều biển cấm, vàng cho
+cảnh báo, xanh cho chỉ dẫn. Histogram 3D với 8 bin mỗi kênh tạo 512 bin
+và được chuẩn hóa theo tổng khối lượng. Histogram không giữ vị trí không
+gian chi tiết, nhưng cung cấp tín hiệu màu tổng thể bổ sung cho HOG.
+
+\subsection{2.4. PCA và giảm
+chiều}\label{pca-vuxe0-giux1ea3m-chiux1ec1u}
+
+Khi nhiều đặc trưng được nối với nhau, số chiều tăng nhanh và có thể
+chứa nhiều thành phần tương quan hoặc dư thừa. PCA biến đổi dữ liệu sang
+hệ trục trực giao được sắp theo phương sai giảm dần. Trong dự án,
+StandardScaler được fit trên train trước PCA; PCA giữ 95\% phương sai và
+giảm vector cuối xuống 571 chiều. PCA không trực tiếp tối ưu nhãn lớp và
+không phải lúc nào cũng là bộ lọc nhiễu; hiệu quả của nó phải được xác
+nhận bằng thực nghiệm.
+
+\subsection{2.5. Support Vector Machine}\label{support-vector-machine}
+
+SVM tìm siêu phẳng có lề phân cách lớn giữa các lớp. Với soft margin, mô
+hình cho phép một số điểm vi phạm lề để cải thiện khả năng khái quát.
+Bài toán nhị phân có thể viết dưới dạng:
+
+\begin{equation}                                         
+\min_{w, b, \xi} \left( \frac{1}{2} \|w\|^2 + C      
+\sum_{i=1}^{n} \xi_i \right)                               
+\end{equation}                                           
+với các ràng buộc:                                       
+\begin{equation}                                         
+y_i (w^{\mathsf{T}}x_i + b) \ge 1 - \xi_i, \quad     
+\text{và} \quad \xi_i \ge 0, \quad \forall i = 1, 2, \dots,
+n                                                          
+\end{equation}   
+
+Tham số C điều khiển đánh đổi giữa lề rộng và mức phạt vi phạm. Kernel
+tuyến tính phù hợp khi dữ liệu có thể phân tách tốt trong không gian
+hiện tại; RBF cho ranh giới linh hoạt hơn nhưng đòi hỏi tuning C và
+gamma. Với bài toán đa lớp, SVC xây dựng nhiều bài toán nhị phân nội bộ.
+Trong dự án, cấu hình Linear SVM với C=0,1 cho validation Macro F1 cao
+nhất.
+
+\subsection{2.6. Đánh giá trên dữ liệu mất cân
+bằng}\label{ux111uxe1nh-giuxe1-truxean-dux1eef-liux1ec7u-mux1ea5t-cuxe2n-bux1eb1ng}
+
+Accuracy đo tỷ lệ dự đoán đúng trên toàn bộ mẫu, nhưng có thể che khuất
+hiệu năng kém của lớp hiếm. Macro Precision, Macro Recall và Macro F1
+tính metric riêng cho từng lớp rồi lấy trung bình không trọng số; do đó
+mỗi lớp đóng góp ngang nhau. Weighted F1 được báo cáo bổ sung để phản
+ánh hiệu năng theo phân bố mẫu thực tế. Dự án chọn Macro F1 làm tiêu chí
+chính để cân bằng giữa precision và recall trên 47 lớp.
+
+\subsection{2.7. Nghiên cứu liên
+quan}\label{nghiuxean-cux1ee9u-liuxean-quan}
+
+Ma và Huang đề xuất hệ thống nhận diện biển báo phân cấp coarse-to-fine,
+kết hợp HOG ở tầng thô và Dense-SIFT, LBP, Gabor cùng committee SVM -
+Random Forest ở tầng chi tiết. Phương pháp đạt 98,76\% Accuracy trên
+GTSRB và khoảng 50 ms/ảnh trên phần cứng được báo cáo {[}3{]}. Công
+trình này củng cố hai nhận định: đặc trưng bổ sung có thể tăng hiệu năng
+và chiến lược phân cấp phù hợp với các lớp có ngoại hình gần giống nhau.
+Tuy nhiên, không thể so sánh trực tiếp con số 98,76\% với kết quả NVTS
+của dự án vì bộ dữ liệu, số lớp, kích thước train/test, protocol và phần
+cứng khác nhau.
+
+GTSRB là benchmark lớn với 43 lớp và hơn 50 nghìn ảnh, thường được dùng
+để so sánh các hệ thống nhận diện biển báo {[}4{]}. Dự án hiện tại tập
+trung vào NVTS 47 lớp và mục tiêu lightweight classical ML. Vì vậy,
+related work được dùng để định hướng thiết kế và thảo luận, không dùng
+để khẳng định superiority tuyệt đối.
+
+\section{3. DỮ LIỆU VÀ PHÂN TÍCH MẤT CÂN
+BẰNG}\label{dux1eef-liux1ec7u-vuxe0-phuxe2n-tuxedch-mux1ea5t-cuxe2n-bux1eb1ng}
+
+\subsection{3.1. Bộ dữ liệu NVTS}\label{bux1ed9-dux1eef-liux1ec7u-nvts}
+
+Dự án sử dụng bộ dữ liệu biển báo giao thông Việt Nam NVTS gồm 47 lớp.
+Ảnh đã được crop theo biển báo và được tổ chức thành train, validation
+và test. Train được dùng để fit scaler, PCA và mô hình; validation dùng
+để lựa chọn cấu hình và siêu tham số; test dùng cho các đánh giá được
+artifact ghi nhận. Sau tăng cường, train tăng từ 6.605 lên 7.035 ảnh.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Tập dữ liệu}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Số lớp}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Số ảnh}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Vai trò}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Train gốc & 47 & 6.605 & Huấn luyện bộ biến đổi và mô hình \\
+Validation & 47 & 824 & So sánh cấu hình và chọn siêu tham số \\
+Test & 47 & 851 & Đánh giá theo các artifact dự án \\
+Train sau tăng cường & 47 & 7.035 & Train cuối sau bổ sung 430 ảnh lớp
+hiếm \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 1. Quy mô và vai trò của các tập dữ liệu.}\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{./media/image1.png}
+\caption*{\textit{Hình 1. Quy mô các tập dữ liệu sử dụng trong dự án.}}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\textwidth]{./media/image7.png}
+\caption*{\textit{Hình 2. Một số mẫu ảnh biển báo giao thông Việt Nam sau khi crop từ bộ dữ liệu NVTS.}}
+\end{figure}
+
+Hình 2 cho thấy tập dữ liệu bao gồm nhiều nhóm biển khác nhau như chỉ
+hướng, cấm, hiệu lệnh và cảnh báo. Các mẫu sau crop có sự khác biệt về
+kích thước vùng biển trong khung hình, độ sắc nét, ánh sáng, góc nhìn và
+mức độ nhiễu nền. Điều này giải thích vì sao pipeline cần kết hợp đồng
+thời thông tin hình dạng và màu sắc, thay vì chỉ dựa vào một loại đặc
+trưng đơn lẻ.
+
+\subsection{3.2. Các lớp thiểu số nghiêm
+trọng}\label{cuxe1c-lux1edbp-thiux1ec3u-sux1ed1-nghiuxeam-trux1ecdng}
+
+Phân tích M01 xác định 10 lớp có dưới 30 ảnh train. Đây là các lớp có
+rủi ro cao do biến thiên trong validation/test có thể không được đại
+diện đầy đủ trong train. Danh sách này được sử dụng nhất quán trong bước
+augmentation ở M04.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Nhãn lớp}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Số ảnh train gốc}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+R.301e & 16 \\
+W.205c & 17 \\
+I.409 & 20 \\
+S.505a Xe máy & 20 \\
+S.505a Xe tải & 21 \\
+W.239b\_ & 21 \\
+P.124d & 23 \\
+W.203c & 23 \\
+W.205a & 26 \\
+W.225 & 28 \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 2. Mười lớp có dưới 30 ảnh train.}\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{./media/image2.png}
+\caption*{\textit{Hình 2. Phân bố số ảnh của 10 lớp thiểu số.}}
+\end{figure}
+
+Augmentation cải thiện rõ một số lớp nhưng không thể thay thế dữ liệu
+thật. Đặc biệt, W.205c chỉ có 17 ảnh train và vẫn là lớp khó trong một
+số đánh giá. Báo cáo không khẳng định toàn bộ các lớp hiếm đều đạt
+Recall hoặc F1 cao; kết quả tổng hợp phải được đọc cùng phân tích
+per-class.
+
+\subsection{3.3. Đặc điểm và giới hạn dữ
+liệu}\label{ux111ux1eb7c-ux111iux1ec3m-vuxe0-giux1edbi-hux1ea1n-dux1eef-liux1ec7u}
+
+\begin{itemize}
+\item
+  Ảnh đầu vào đã crop, do đó chưa phản ánh sai số của bước phát hiện
+  biển báo trong cảnh đường phố.
+\item
+  Một số lớp chỉ khác nhau ở chi tiết rất nhỏ như chữ số hoặc hướng mũi
+  tên; độ phân giải thấp làm giảm khả năng phân biệt.
+\item
+  Phân bố lớp mất cân bằng khiến metric per-class của lớp hiếm có phương
+  sai cao.
+\item
+  Hiện chỉ có một cách chia train/validation/test được báo cáo; chưa có
+  repeated stratified cross-validation cho toàn pipeline.
+\end{itemize}
+
+\section{4. PHƯƠNG PHÁP ĐỀ
+XUẤT}\label{phux1b0ux1a1ng-phuxe1p-ux111ux1ec1-xuux1ea5t}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{./media/image3.png}
+\caption*{\textit{Hình 3. Pipeline cuối cùng của hệ thống nhận diện.}}
+\end{figure}
+
+\subsection{4.1. Chiến lược thực nghiệm hai giai
+đoạn}\label{chiux1ebfn-lux1b0ux1ee3c-thux1ef1c-nghiux1ec7m-hai-giai-ux111oux1ea1n}
+
+Phase 1 khóa bộ phân loại ở cấu hình SVC RBF, C=10, gamma=scale và
+class\_weight=balanced. Việc cố định mô hình giúp cô lập ảnh hưởng của
+kích thước ảnh, chế độ resize, không gian màu, dung hợp đặc trưng, PCA
+và augmentation. Sau khi chốt không gian đặc trưng, Phase 2 benchmark
+nhiều thuật toán và tinh chỉnh kernel, C, gamma và class\_weight. Cách
+tổ chức này hạn chế việc gán nhầm cải thiện do model tuning cho feature
+engineering hoặc ngược lại.
+
+\subsection{4.2. Tiền xử lý hình
+học}\label{tiux1ec1n-xux1eed-luxfd-huxecnh-hux1ecdc}
+
+M02 khảo sát 32×32, 48×48 và 64×64 với hai chế độ stretch và
+pad\_square. Trong ablation HOG Gray độc lập, 48×48 stretch đạt
+Validation Macro F1 cao nhất 95,95\%. Tuy nhiên, pipeline tích hợp
+M04/M06 sử dụng 64×64 pad\_square cùng HOG, histogram màu, PCA và
+augmentation. Pad\_square đệm ảnh về hình vuông trước khi resize, nhờ đó
+hạn chế làm méo hình tròn, tam giác và chữ nhật. Báo cáo ghi nhận rõ sự
+khác biệt giữa ``cấu hình tốt nhất trong ablation riêng'' và ``cấu hình
+cuối của pipeline''.
+
+\subsection{4.3. Đặc trưng HOG
+Gray}\label{ux111ux1eb7c-trux1b0ng-hog-gray}
+
+Ảnh được chuyển sang grayscale trước khi tính HOG. Gradient ngang và dọc
+được ước lượng tại từng pixel; độ lớn và góc gradient được tổng hợp
+thành histogram hướng trong các cell, sau đó chuẩn hóa theo block. Cấu
+hình được ghi nhận gồm 9 hướng, pixels\_per\_cell=(8,8),
+cells\_per\_block=(2,2) và block\_norm=L2-Hys. HOG tập trung vào đường
+viền, góc và cấu trúc biểu tượng nên phù hợp để phân biệt hình học của
+biển báo.
+
+\subsection{4.4. Color Histogram HSV}\label{color-histogram-hsv}
+
+Song song với HOG, ảnh màu được chuyển sang HSV và xây dựng histogram ba
+chiều với 8 bin cho mỗi kênh, tạo 512 bin. Histogram được chuẩn hóa để
+giảm ảnh hưởng của cường độ tổng. So với tính HOG trên nhiều kênh màu,
+histogram HSV cung cấp tín hiệu màu gọn hơn và tránh mở rộng quá lớn số
+chiều gradient.
+
+\subsection{4.5. Dung hợp đặc
+trưng}\label{dung-hux1ee3p-ux111ux1eb7c-trux1b0ng}
+
+Vector HOG và HSV Histogram được nối theo chiều cột. Artifact nghiệm thu
+M04 ghi nhận vector sau dung hợp có 1.812 chiều. Do giá trị này chưa
+khớp hoàn toàn với phép tính lý thuyết từ bộ tham số HOG được mô tả, báo
+cáo sử dụng con số 1.812 như giá trị thực nghiệm và không công bố
+decomposition chi tiết khi chưa audit trực tiếp mã nguồn final. Đây là
+lựa chọn thận trọng nhằm tránh tạo ra thông tin có vẻ chính xác nhưng
+không được chứng minh.
+
+\subsection{4.6. StandardScaler và PCA}\label{standardscaler-vuxe0-pca}
+
+StandardScaler chỉ được fit trên train để đưa mỗi chiều về trung bình 0
+và độ lệch chuẩn 1. Cùng scaler đó được dùng để transform validation và
+test. PCA cũng chỉ fit trên train, giữ 95\% phương sai. Sau biến đổi, số
+chiều pipeline cuối là 571. Quy tắc fit trên train giúp tránh data
+leakage từ validation/test vào bộ biến đổi.
+
+Trong M04, PCA giảm thời gian inference từ 5,93 ms/ảnh xuống 1,91 ms/ảnh
+ở cấu hình validation, trong khi Macro F1 tăng từ 94,85\% lên 95,04\%.
+Kết quả này cho thấy PCA vừa giảm chi phí tính toán vừa có tác dụng
+regularization thực nghiệm trên bộ đặc trưng cụ thể.
+
+\subsection{4.7. Tăng cường dữ liệu cho lớp
+hiếm}\label{tux103ng-cux1b0ux1eddng-dux1eef-liux1ec7u-cho-lux1edbp-hiux1ebfm}
+
+Đối với 10 lớp có dưới 30 ảnh train, nhóm áp dụng xoay nhẹ khoảng ±10°
+và điều chỉnh độ sáng khoảng ±15\% trên ảnh 2D trước khi trích xuất đặc
+trưng. Tổng số ảnh train tăng thêm 430. Cách làm này đảm bảo mỗi mẫu mới
+tương ứng với một ảnh có ý nghĩa vật lý và HOG được tính lại từ cấu trúc
+cạnh sau biến đổi.
+
+SMOTE không được dùng trong pipeline cuối. Trong không gian HOG, nội suy
+tuyến tính giữa hai vector có thể tạo mẫu không tương ứng với một ảnh cụ
+thể. Điều này không có nghĩa SMOTE luôn không phù hợp, nhưng
+augmentation ảnh là lựa chọn dễ kiểm soát và diễn giải hơn cho dự án.
+
+\subsection{4.8. Bộ phân loại cuối
+cùng}\label{bux1ed9-phuxe2n-loux1ea1i-cuux1ed1i-cuxf9ng}
+
+Sau benchmark và tuning, mô hình được chọn là SVC(kernel="linear",
+C=0.1, class\_weight=None). C=0,1 tạo regularization mạnh hơn các giá
+trị C lớn, cho phép một số điểm vi phạm lề để giảm nhạy với outlier. Ba
+chiến lược class\_weight None, balanced và custom cho cùng Validation
+Macro F1 97,30\%; vì vậy None được chọn do đơn giản hơn và cho thấy
+augmentation đã giảm nhu cầu điều chỉnh trọng số lớp trong split hiện
+tại.
+
+\section{5. THIẾT KẾ THỰC
+NGHIỆM}\label{thiux1ebft-kux1ebf-thux1ef1c-nghiux1ec7m}
+
+\subsection{5.1. Quy tắc fit và
+transform}\label{quy-tux1eafc-fit-vuxe0-transform}
+
+\begin{itemize}
+\item
+  Augmentation chỉ áp dụng trên train; validation và test không được
+  tăng cường.
+\item
+  StandardScaler và PCA được fit trên train rồi mới transform
+  validation/test.
+\item
+  Lựa chọn kernel và siêu tham số M06 dựa trên Validation Macro F1.
+\item
+  Macro F1 là metric chính; Accuracy và các metric còn lại dùng để giải
+  thích trade-off.
+\item
+  Thời gian inference được chuẩn hóa theo ms/ảnh và cần ghi rõ phạm vi
+  đo.
+\end{itemize}
+
+\subsection{5.2. Chỉ số đánh
+giá}\label{chux1ec9-sux1ed1-ux111uxe1nh-giuxe1}
+
+\begin{align}                                            
+\text{Precision}_k &= \frac{\text{TP}_k}{\text{TP}_k +
+\text{FP}_k} \\[0.6em]                                     
+\text{Recall}_k &= \frac{\text{TP}_k}{\text{TP}_k +  
+\text{FN}_k} \\[0.6em]                                     
+\text{F1}_k &= \frac{2 \cdot \text{Precision}_k \cdot
+\text{Recall}_k}{\text{Precision}_k + \text{Recall}_k}     
+\\[0.8em]                                                  
+\text{Macro F1} &= \frac{1}{K} \sum_{k=1}^{K}        
+\text{F1}_k                                                
+\end{align}
+
+Macro F1 cho trọng số ngang nhau cho 47 lớp và được dùng làm tiêu chí
+lựa chọn chính. Macro Recall đặc biệt hữu ích để quan sát mức bỏ sót các
+lớp khó, còn Macro Precision phản ánh số false positive. Weighted F1 và
+Accuracy giúp mô tả hiệu năng theo phân bố mẫu thực tế.
+
+\subsection{5.3. Ma trận thực
+nghiệm}\label{ma-trux1eadn-thux1ef1c-nghiux1ec7m}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Nhiệm vụ}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Mục tiêu}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Thành phần chính}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+M01 & Chẩn đoán dữ liệu và lớp hiếm & Phân bố lớp, bottleneck, nhóm
+lỗi \\
+M02 & Tối ưu kích thước và resize & 32/48/64; stretch/pad\_square \\
+M03 & Khảo sát đặc trưng màu và fusion & HOG Gray, HOG YUV, HOG + HSV \\
+M04 & Đánh giá PCA và augmentation & Không PCA; PCA; PCA +
+augmentation \\
+M05 & Benchmark mô hình & SVC, RF, LightGBM, LR, KNN, MLP \\
+M06 & Fine-tuning SVM & Kernel, C, gamma, class\_weight \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 3. Cấu trúc nhiệm vụ thực nghiệm của dự án.}\end{center}
+
+\subsection{5.4. Audit việc sử dụng tập
+test}\label{audit-viux1ec7c-sux1eed-dux1ee5ng-tux1eadp-test}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Lưu ý về tính hợp lệ của protocol}
+
+Các artifact hiện có đã ghi nhận test metric ở Phase 1 và M05 trước khi
+báo cáo kết quả M06. Vì vậy, không nên mô tả tập test như một blind
+holdout chỉ được truy cập đúng một lần trong toàn bộ vòng đời dự án.
+Việc chọn cấu hình M06 dựa trên validation giúp giảm rủi ro overfit trực
+tiếp vào test, nhưng repeated observation vẫn là một đe dọa tính hợp lệ.
+Phiên bản tiếp theo nên khóa test, dùng validation/cross-validation cho
+toàn bộ lựa chọn và chỉ mở test sau khi pipeline được đóng băng.
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\subsection{5.5. Phạm vi của phép đo độ
+trễ}\label{phux1ea1m-vi-cux1ee7a-phuxe9p-ux111o-ux111ux1ed9-trux1ec5}
+
+Con số 1,52 ms/ảnh trong final result phản ánh thời gian dự đoán của
+classifier trên vector đã được StandardScaler/PCA xử lý theo artifact
+M06. Nó chưa bao gồm đọc ảnh, pad\_square, resize, HOG, HSV Histogram,
+scaler và PCA. Do đó không nên quy đổi trực tiếp thành FPS end-to-end.
+Muốn đánh giá triển khai thực tế, cần profiling từng bước trên cùng phần
+cứng mục tiêu.
+
+\section{6. KẾT QUẢ THỰC
+NGHIỆM}\label{kux1ebft-quux1ea3-thux1ef1c-nghiux1ec7m}
+
+\subsection{6.1. Kích thước ảnh và chế độ resize
+(M02)}\label{kuxedch-thux1b0ux1edbc-ux1ea3nh-vuxe0-chux1ebf-ux111ux1ed9-resize-m02}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Cấu hình}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Số chiều HOG}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Accuracy (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Macro F1 (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Train (s)}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+32×32 stretch & 1.764 & 95,15 & 92,16 & 18,51 \\
+32×32 pad\_square & 1.764 & 94,90 & 92,19 & 15,72 \\
+48×48 stretch & 900 & 96,48 & 95,95 & 5,84 \\
+48×48 pad\_square & 900 & 96,12 & 94,56 & 5,87 \\
+64×64 stretch & 1.764 & 95,87 & 94,04 & 13,07 \\
+64×64 pad\_square & 1.764 & 95,51 & 93,44 & 13,52 \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 4. Kết quả khảo sát kích thước và chế độ resize ở M02 {[}5{]}.}\end{center}
+
+48×48 stretch đạt Macro F1 cao nhất trong ablation HOG Gray. Kết quả cho
+thấy tăng kích thước không tự động làm hiệu năng tăng; số chiều lớn hơn
+có thể thêm nhiễu và tăng chi phí. Tuy nhiên, bảng này chưa đánh giá
+toàn bộ pipeline có màu, PCA và augmentation nên không trực tiếp quyết
+định cấu hình final.
+
+\subsection{6.2. Không gian màu và dung hợp đặc trưng
+(M03)}\label{khuxf4ng-gian-muxe0u-vuxe0-dung-hux1ee3p-ux111ux1eb7c-trux1b0ng-m03}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Đặc trưng}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Số chiều}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Accuracy (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Macro F1 (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Train (s)}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+HOG Gray & 900 & 96,48 & 95,95 & 6,33 \\
+HOG YUV & 2.700 & 96,36 & 94,75 & 25,60 \\
+HOG Gray + HSV Histogram & 1.412 & 95,87 & 95,19 & 9,08 \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 5. Kết quả khảo sát đặc trưng ở M03 {[}5{]}.}\end{center}
+
+HOG Gray đơn lẻ đạt F1 cao nhất trong ablation M03, còn HOG YUV vừa tăng
+số chiều vừa giảm F1. HOG + HSV chưa vượt HOG Gray ở cấu hình 48×48
+riêng lẻ nhưng được giữ lại vì cung cấp thông tin màu bổ sung và cho kết
+quả tốt hơn khi kết hợp với cấu hình M04, PCA và augmentation. Điều này
+cho thấy không nên chọn thành phần chỉ dựa trên một thí nghiệm cô lập.
+
+\subsection{6.3. Tác động của PCA và augmentation
+(M04)}\label{tuxe1c-ux111ux1ed9ng-cux1ee7a-pca-vuxe0-augmentation-m04}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Cấu hình}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Số chiều}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Số ảnh train}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Accuracy (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Macro F1 (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Inference (ms/ảnh)}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+TN3.1: Không PCA, không Aug & 1.812 & 6.605 & 96,24 & 94,85 & 5,93 \\
+TN3.2: PCA 95\% & 569 & 6.605 & 96,60 & 95,04 & 1,91 \\
+TN3.3: PCA 95\% + Aug & 571 & 7.035 & 96,72 & 95,77 & 1,96 \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 6. Tác động của PCA và minority augmentation ở M04 {[}5{]}.}\end{center}
+
+PCA giảm khoảng 68,5\% số chiều và làm inference nhanh hơn hơn ba lần
+trong ablation M04. Augmentation bổ sung 430 ảnh và nâng Macro F1
+validation từ 95,04\% lên 95,77\%. Artifact Phase 1 ghi nhận mô hình RBF
+đạt Test Accuracy 96,24\%, Test Macro F1 95,64\% và 1,93 ms/ảnh.
+
+\subsection{6.4. Benchmark sáu họ mô hình
+(M05)}\label{benchmark-suxe1u-hux1ecd-muxf4-huxecnh-m05}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Mô hình}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Train (s)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Inference (ms/ảnh)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Accuracy (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Macro F1 (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Minority Recall (\%)}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SVC RBF & 3,5868 & 2,4520 & 95,77 & 95,37 & 86,67 \\
+Random Forest & 2,6118 & 0,0310 & 85,78 & 84,74 & 75,00 \\
+LightGBM & 40,4803 & 0,0373 & 87,78 & 86,70 & 80,83 \\
+Logistic Regression & 1,2973 & 0,0027 & 95,77 & 94,82 & 89,17 \\
+KNN & 0,0117 & 1,8068 & 94,83 & 94,23 & 87,50 \\
+MLP & 2,9231 & 0,0018 & 95,18 & 93,62 & 87,50 \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 7. Benchmark sáu mô hình trên đặc trưng PCA 571 chiều {[}6{]}.}\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{./media/image4.png}
+\caption*{\textit{Hình 4. So sánh Macro F1 của sáu họ mô hình trong artifact M05.}}
+\end{figure}
+
+SVC RBF dẫn đầu benchmark; Logistic Regression đạt Accuracy tương đương
+và Macro F1 chỉ thấp hơn 0,55 điểm phần trăm. Đây là tín hiệu rằng không
+gian sau PCA phù hợp tốt với mô hình tuyến tính. Random Forest và
+LightGBM có inference nhanh nhưng F1 thấp hơn đáng kể; KNN và MLP cạnh
+tranh nhưng không vượt SVM.
+
+\subsection{6.5. Khảo sát kernel và siêu tham số SVM
+(M06)}\label{khux1ea3o-suxe1t-kernel-vuxe0-siuxeau-tham-sux1ed1-svm-m06}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Kernel / cấu hình}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Accuracy (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Val Macro F1 (\%)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Train (s)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Support vectors}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Linear, C=0,1,\newline class\_weight=\newline None & 96,72 & 97,30 & 2,46 & 4.514 \\
+Linear, C=10, balanced & 96,72 & 97,30 & 2,22 & 4.514 \\
+RBF, C=10, gamma=scale & 96,72 & 95,77 & 6,25 & 5.331 \\
+RBF, C=5,\newline gamma=\newline 0,0005 & 96,84 & 95,81 & 5,20 & 5.261 \\
+Polynomial degree 2 & 96,72 & 95,03 & 6,32 & 5.273 \\
+Polynomial degree 3 & 94,78 & 93,43 & 14,28 & 5.172 \\
+Sigmoid & 94,05 & 92,96 & 2,35 & 3.812 \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 8. Kết quả khảo sát kernel SVM trên validation {[}6{]}, {[}7{]}.}\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{./media/image5.png}
+\caption*{\textit{Hình 5. Validation Macro F1 theo kernel SVM.}}
+\end{figure}
+
+Linear SVM đạt Validation Macro F1 97,30\%, cao hơn RBF baseline 1,53
+điểm phần trăm. Nhiều giá trị C cho cùng metric validation, cho thấy
+nghiệm khá ổn định trên split này. C=0,1 được chọn theo nguyên tắc ưu
+tiên regularization mạnh hơn khi hiệu năng tương đương. Ba chiến lược
+class\_weight cũng cho cùng F1, vì vậy class\_weight=None được chọn.
+
+\subsection{6.6. Kết quả chung cuộc và
+trade-off}\label{kux1ebft-quux1ea3-chung-cuux1ed9c-vuxe0-trade-off}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Chỉ số}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Phase 1: RBF}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Phase 2: Linear}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Chênh lệch}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Test Accuracy (\%) & 96,24 & 96,12 & -0,12 \\
+Test Macro F1 (\%) & 95,64 & 96,29 & +0,65 \\
+Test Macro Precision (\%) & 98,08 & 97,51 & -0,57 \\
+Test Macro Recall (\%) & 94,39 & 95,62 & +1,23 \\
+Test Weighted F1 (\%) & 96,15 & 96,09 & -0,06 \\
+Classifier inference (ms/ảnh) & 1,93 & 1,52 & -0,41 \\
+Support vectors & 5.331 & 4.514 & -817 \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 9. So sánh kết quả được ghi nhận giữa Phase 1 và Phase 2 {[}6{]}.}\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\textwidth]{./media/image8.png}
+\caption*{\textit{Hình 6. Diễn biến cải thiện kết quả qua bốn mốc phát triển của hệ thống.}}
+\end{figure}
+
+Biểu đồ ở Hình 6 cho thấy hiệu năng được cải thiện qua từng giai đoạn. Từ baseline ban đầu, PCA vừa giảm mạnh số chiều từ
+1.812 xuống 569 vừa tăng nhẹ Validation Macro F1. Sau đó, minority
+augmentation tiếp tục nâng Validation Macro F1 lên 95,77\% và giúp cải
+thiện khả năng nhận diện lớp hiếm. Ở giai đoạn cuối, việc chuyển từ RBF
+SVM sang Linear SVM trên không gian đặc trưng đã được chuẩn hóa và giảm
+chiều tạo ra bước nhảy lớn nhất, đưa Validation Macro F1 lên 97,30\% và
+Test Macro F1 lên 96,29\%.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{./media/image6.png}
+\caption*{\textit{Hình 7. Đối chiếu các metric giữa Phase 1 và Phase 2.}}
+\end{figure}
+
+Linear SVM tăng Macro F1 0,65 điểm phần trăm và Macro Recall 1,23 điểm
+phần trăm, trong khi Accuracy giảm 0,12 và Macro Precision giảm 0,57.
+Đây là trade-off hợp lý trong dữ liệu mất cân bằng: mô hình nhận diện
+tốt hơn các lớp khó và giảm false negative, đổi lại phát sinh thêm một
+số false positive. Vì Macro F1 là metric chính, Linear SVM được chọn làm
+mô hình cuối.
+
+\subsection{6.7. Phân tích nhóm lỗi còn
+lại}\label{phuxe2n-tuxedch-nhuxf3m-lux1ed7i-cuxf2n-lux1ea1i}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Cặp / nhóm lớp}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Đặc điểm gây nhầm}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Nguyên nhân khả dĩ}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Hướng xử lý}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+P.127\_60 $\leftrightarrow$ P.127\_80 & Cùng biển tròn viền đỏ, khác chữ số & Chi tiết
+số nhỏ, mờ hoặc nén bởi PCA & Crop vùng số; đặc trưng độ phân giải cao;
+classifier chuyên biệt \\
+W.224 $\leftrightarrow$ W.245a & Cùng tam giác nền vàng, biểu tượng đen & Hình dạng tổng
+thể giống; biểu tượng trung tâm nhỏ & Đặc trưng local; multi-stage
+classification \\
+P.130 $\leftrightarrow$ P.131a & Cấu trúc hình học gần giống, khác hướng ký hiệu & Lệch
+góc và blur làm mất hướng & Augmentation góc nhìn; orientation-sensitive
+local features \\
+W.205c & Lớp cực hiếm & 17 ảnh train, biến thiên test chưa được đại diện
+& Thu thập dữ liệu thật; few-shot/metric learning trong tương lai \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng 10. Các nhóm lỗi tiêu biểu và hướng khắc phục.}\end{center}
+
+Các lỗi trên cho thấy giới hạn không nằm hoàn toàn ở bộ phân loại. Khi
+hai lớp có cùng hình dạng và màu sắc, phần thông tin quyết định thường
+chỉ nằm ở một vùng rất nhỏ. Nếu vùng này bị mờ, nén hoặc chiếm quá ít
+pixel, cả HOG và histogram màu đều khó cung cấp tín hiệu đủ mạnh. Vì
+vậy, tăng độ phức tạp của classifier chưa chắc giải quyết được nguyên
+nhân gốc.
+
+W.205c minh họa rõ small-sample problem: chỉ 17 ảnh train không đủ bao
+phủ các góc nhìn và điều kiện ảnh khác nhau. Hướng ưu tiên nên là bổ
+sung dữ liệu thật và đánh giá per-class ổn định hơn, trước khi áp dụng
+các mô hình phức tạp hoặc kỹ thuật tổng hợp mạnh.
+
+\section{7. THẢO LUẬN}\label{thux1ea3o-luux1eadn}
+
+\subsection{7.1. Vì sao HOG và HSV bổ sung cho
+nhau?}\label{vuxec-sao-hog-vuxe0-hsv-bux1ed5-sung-cho-nhau}
+
+HOG tập trung vào hình dạng, đường viền và biểu tượng; HSV Histogram mô
+tả phân bố màu tổng thể. Hai biển có hình dạng giống nhau nhưng màu khác
+có thể được tách nhờ HSV, trong khi hai biển cùng màu nền nhưng biểu
+tượng khác nhau được tách nhờ HOG. Sự bổ sung này phù hợp với cấu trúc
+thiết kế của biển báo giao thông. Tuy nhiên, ablation M03 cho thấy
+fusion không tự động tốt hơn HOG đơn lẻ; lợi ích chỉ xuất hiện khi xét
+cả pipeline cùng PCA và augmentation.
+
+\subsection{7.2. Vai trò thực nghiệm của
+PCA}\label{vai-truxf2-thux1ef1c-nghiux1ec7m-cux1ee7a-pca}
+
+PCA giảm bộ nhớ, số phép tính và độ trễ, đồng thời cải thiện nhẹ Macro
+F1 trong M04. Tuy nhiên, PCA tối đa hóa phương sai chứ không tối ưu trực
+tiếp khả năng phân lớp. Một số chi tiết có phương sai nhỏ nhưng quan
+trọng cho nhãn, ví dụ nét chữ số, có thể bị suy giảm khi nén. Vì vậy,
+kết luận đúng là ``PCA hiệu quả trên bộ đặc trưng và split này'', không
+phải ``PCA luôn loại bỏ nhiễu và luôn tăng độ chính xác''.
+
+\subsection{7.3. Vì sao Linear SVM tốt hơn RBF trong pipeline
+này?}\label{vuxec-sao-linear-svm-tux1ed1t-hux1a1n-rbf-trong-pipeline-nuxe0y}
+
+Kết quả Logistic Regression và Linear SVM cho thấy dữ liệu sau
+StandardScaler và PCA có khả năng phân tách tốt bằng ranh giới tuyến
+tính. Khi đó, RBF thêm độ linh hoạt không cần thiết và có thể nhạy hơn
+với tham số. C=0,1 tạo soft margin rộng hơn, giảm nhạy với outlier và
+ảnh biến dạng. Kết luận chỉ áp dụng cho pipeline HOG+HSV+PCA hiện tại;
+không thể suy rộng rằng Linear SVM luôn tốt hơn RBF trong mọi bài toán
+biển báo.
+
+Về triển khai, SVC kernel tuyến tính vẫn có thể dựa trên support vectors
+trong quá trình dự đoán tùy cách hiện thực của thư viện. Vì vậy báo cáo
+sử dụng thời gian đo thực tế và số support vector, không đơn giản hóa
+thành giả định rằng dự đoán chắc chắn chỉ là một phép $w^{\mathsf{T}}x+b$ duy nhất
+trong mọi implementation.
+
+\subsection{7.4. Vì sao Random Forest và LightGBM thấp
+hơn?}\label{vuxec-sao-random-forest-vuxe0-lightgbm-thux1ea5p-hux1a1n}
+
+Cây quyết định chia không gian bằng các ngưỡng theo từng chiều. Sau PCA,
+mỗi chiều là tổ hợp tuyến tính của nhiều đặc trưng gốc; ranh giới lớp có
+thể nằm theo hướng chéo và cần nhiều phép chia để xấp xỉ, tạo vùng quyết
+định phân mảnh. Đây là một giải thích hợp lý cho việc Random Forest và
+LightGBM thấp hơn SVM 8,7-10,6 điểm Macro F1, nhưng nên được xem là giả
+thuyết dựa trên đặc trưng của mô hình và kết quả, không phải chứng minh
+duy nhất.
+
+\subsection{7.5. Hạn chế của KNN trong 571
+chiều}\label{hux1ea1n-chux1ebf-cux1ee7a-knn-trong-571-chiux1ec1u}
+
+KNN dựa vào khoảng cách giữa mẫu. Trong không gian cao chiều, khoảng
+cách có xu hướng ít phân biệt hơn và dự đoán phải so sánh với nhiều mẫu
+train. PCA đã giảm chiều đáng kể nhưng 571 vẫn cao. KNN đạt Macro F1
+94,23\%, cho thấy đặc trưng có chất lượng, nhưng không vượt SVM và
+classifier inference khoảng 1,81 ms/ảnh.
+
+\subsection{7.6. Ý nghĩa của việc tăng Macro
+Recall}\label{uxfd-nghux129a-cux1ee7a-viux1ec7c-tux103ng-macro-recall}
+
+Phase 2 giảm nhẹ Accuracy và Precision nhưng tăng Recall. Trong ứng dụng
+biển báo, bỏ sót một biển hiếm có thể nghiêm trọng hơn một số false
+positive bổ sung, tùy kịch bản triển khai. Macro Recall tăng 1,23 điểm
+cho thấy mô hình quan tâm tốt hơn đến các lớp khó. Tuy nhiên, để kết
+luận về an toàn, cần đánh giá theo chi phí lỗi của từng lớp và trên dữ
+liệu đường phố thực tế, không chỉ dựa vào metric trung bình.
+
+\subsection{7.7. Khả năng triển
+khai}\label{khux1ea3-nux103ng-triux1ec3n-khai}
+
+Classifier inference 1,52 ms/ảnh tương đương khoảng 658 dự đoán/giây nếu
+chỉ xét bước phân loại. Đây không phải FPS end-to-end. Dù vậy, kết quả
+cho thấy classifier không phải nút thắt lớn và pipeline có tiềm năng
+thời gian thực nếu HOG, HSV và PCA được tối ưu. Cần đo trên phần cứng
+mục tiêu, báo cáo RAM, kích thước model và độ trễ từng stage trước khi
+khẳng định khả năng triển khai edge.
+
+\section{8. HẠN CHẾ VÀ ĐE DỌA TÍNH HỢP
+LỆ}\label{hux1ea1n-chux1ebf-vuxe0-ux111e-dux1ecda-tuxednh-hux1ee3p-lux1ec7}
+
+\subsection{8.1. Hạn chế dữ
+liệu}\label{hux1ea1n-chux1ebf-dux1eef-liux1ec7u}
+
+\begin{itemize}
+\item
+  Một số lớp có quá ít ảnh, khiến metric per-class có phương sai cao và
+  khó khái quát.
+\item
+  Ảnh đã crop nên chưa đánh giá sai số detection, background clutter và
+  multiple signs.
+\item
+  Augmentation mới bao phủ xoay và sáng nhẹ; chưa bao phủ perspective,
+  motion blur, occlusion và weather.
+\item
+  Một split duy nhất chưa đủ để ước lượng độ ổn định của mô hình.
+\end{itemize}
+
+\subsection{8.2. Hạn chế protocol}\label{hux1ea1n-chux1ebf-protocol}
+
+\begin{itemize}
+\item
+  Các artifact đã quan sát test ở nhiều giai đoạn; test không còn là
+  blind holdout tuyệt đối.
+\item
+  Một số benchmark M05 dùng cột tên ``Test'', vì vậy cần tránh sử dụng
+  chính các kết quả đó để lựa chọn lặp lại mà không có validation độc
+  lập.
+\item
+  Chưa báo cáo khoảng tin cậy hoặc kiểm định thống kê cho chênh lệch
+  0,65 điểm Macro F1.
+\item
+  Thời gian train/inference có thể không so sánh trực tiếp nếu các bước
+  đo hoặc phần cứng khác nhau.
+\end{itemize}
+
+\subsection{8.3. Hạn chế tái lập và nhất quán
+artifact}\label{hux1ea1n-chux1ebf-tuxe1i-lux1eadp-vuxe0-nhux1ea5t-quuxe1n-artifact}
+
+\begin{itemize}
+\item
+  Số chiều 1.812 được lấy từ artifact M04 nhưng chưa khớp hoàn toàn với
+  decomposition lý thuyết từ các tham số HOG được ghi lại.
+\item
+  Cần lưu phiên bản thư viện, seed, phần cứng, mã hash dữ liệu và
+  command chạy cuối để tái lập đầy đủ.
+\item
+  Con số 1,52 ms/ảnh chỉ là classifier inference; chưa có profiling
+  end-to-end.
+\item
+  Chưa báo cáo kích thước file model, peak RAM và thời gian khởi tạo
+  pipeline.
+\end{itemize}
+
+\section{9. HƯỚNG PHÁT TRIỂN}\label{hux1b0ux1edbng-phuxe1t-triux1ec3n}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{10}
+\item
+  Thu thập thêm dữ liệu thật cho các lớp dưới 30 ảnh, ưu tiên W.205c và
+  các lớp có per-class Recall thấp.
+\item
+  Xây dựng phân loại phân cấp coarse-to-fine: tầng đầu nhận diện nhóm
+  hình dạng/màu, tầng sau xử lý các cặp dễ nhầm, tham khảo chiến lược
+  của Ma và Huang {[}3{]}.
+\item
+  Tách vùng trung tâm hoặc vùng chữ số ở độ phân giải cao cho nhóm biển
+  tốc độ.
+\item
+  Mở rộng augmentation có kiểm soát với perspective transform, blur,
+  contrast, occlusion và mô phỏng thời tiết.
+\item
+  Thực hiện repeated stratified cross-validation hoặc nested validation
+  cho toàn pipeline; khóa test chỉ dùng một lần.
+\item
+  So sánh SVC linear với LinearSVC, SGDClassifier hoặc mô hình tuyến
+  tính nén để giảm kích thước và latency.
+\item
+  Đo end-to-end latency, RAM và model size trên CPU/edge device, phân rã
+  thời gian từng stage.
+\item
+  Kết hợp module phát hiện biển báo để tạo pipeline end-to-end trên ảnh
+  đường phố.
+\end{enumerate}
+
+\section{10. KẾT LUẬN}\label{kux1ebft-luux1eadn}
+
+Dự án đã xây dựng một pipeline nhận diện biển báo giao thông Việt Nam
+dựa trên computer vision truyền thống và học máy cổ điển. Pipeline cuối
+gồm 64×64 pad\_square, HOG Gray, HSV Color Histogram, StandardScaler,
+PCA giữ 95\% phương sai, augmentation ảnh cho 10 lớp thiểu số và SVC
+tuyến tính với C=0,1.
+
+Quá trình thực nghiệm được tổ chức theo hai giai đoạn. Phase 1 tối ưu
+tiền xử lý và đặc trưng với RBF cố định; Phase 2 benchmark sáu họ mô
+hình và tinh chỉnh SVM. Cấu hình cuối đạt Accuracy 96,12\%, Macro F1
+96,29\%, Macro Recall 95,62\% và classifier inference 1,52 ms/ảnh trên
+tập test 851 ảnh. So với RBF Phase 1, Linear SVM tăng Macro F1 0,65 điểm
+phần trăm và Macro Recall 1,23 điểm phần trăm, đồng thời giảm 817
+support vector.
+
+Kết quả chứng minh rằng thiết kế biểu diễn có thể quan trọng hơn việc
+tăng độ phức tạp mô hình. HOG và HSV cung cấp thông tin bổ sung; PCA
+giảm mạnh số chiều; augmentation giúp lớp hiếm; và Linear SVM phù hợp
+tốt với không gian sau biến đổi. Đồng thời, báo cáo xác định rõ các giới
+hạn về repeated test exposure, latency chưa end-to-end, lớp cực hiếm và
+sự chưa thống nhất số chiều artifact. Những điểm này tạo nền tảng minh
+bạch cho việc cải tiến và tái lập dự án trong giai đoạn tiếp theo.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Kết luận lựa chọn mô hình}
+
+Linear SVM được chọn không phải vì mọi chỉ số đều cao hơn RBF, mà vì nó
+tối ưu tiêu chí chính Macro F1, tăng Macro Recall, giảm số support
+vector và có classifier inference thấp hơn. Đây là một quyết định dựa
+trên trade-off, không phải chỉ dựa trên Accuracy.
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\end{longtable}
+
+\section{TÀI LIỆU THAM KHẢO}\label{tuxe0i-liux1ec7u-tham-khux1ea3o}
+
+{[}1{]} C. Cortes and V. Vapnik, ``Support-vector networks,'' Machine
+Learning, vol. 20, pp. 273-297, 1995.
+
+{[}2{]} N. Dalal and B. Triggs, ``Histograms of oriented gradients for
+human detection,'' in Proc. IEEE CVPR, 2005, pp. 886-893.
+
+{[}3{]} Y. Ma and L. Huang, ``Hierarchical traffic sign recognition
+based on multi-feature and multi-classifier fusion,'' First
+International Conference on Information Science and Electronic
+Technology, 2015, pp. 56-59.
+
+{[}4{]} J. Stallkamp, M. Schlipsing, J. Salmen, and C. Igel, ``Man vs.
+computer: Benchmarking machine learning algorithms for traffic sign
+recognition,'' Neural Networks, vol. 32, pp. 323-332, 2012.
+
+{[}5{]} R01, ``Báo cáo tổng kết Phase 1-New: tối ưu hóa tiền xử lý và kỹ
+thuật đặc trưng,'' tài liệu nội bộ dự án, 05/07/2026.
+
+{[}6{]} R02, ``Báo cáo tổng kết Phase 2-New: khảo sát mô hình học máy và
+tinh chỉnh SVM,'' tài liệu nội bộ dự án, 12/07/2026.
+
+{[}7{]} M07, ``Tài liệu tổng hợp và bàn giao cho Phase 3 Paper
+Writing,'' tài liệu nội bộ dự án, 12/07/2026.
+
+\section{PHỤ LỤC A. CẤU HÌNH CUỐI CÙNG CỦA HỆ
+THỐNG}\label{phux1ee5-lux1ee5c-a.-cux1ea5u-huxecnh-cuux1ed1i-cuxf9ng-cux1ee7a-hux1ec7-thux1ed1ng}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Thành phần}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Cấu hình chốt}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Dữ liệu & NVTS, 47 lớp; Train 6.605, Validation 824, Test 851 \\
+Tiền xử lý & 64×64, pad\_square \\
+Đặc trưng hình dạng & HOG trên ảnh grayscale \\
+Đặc trưng màu & HSV Color Histogram 8×8×8 bins \\
+Dung hợp & Vector 1.812 chiều theo artifact M04 \\
+Chuẩn hóa & StandardScaler fit trên train \\
+Giảm chiều & PCA 95\% phương sai, 571 chiều final \\
+Xử lý mất cân bằng & Augmentation ảnh 2D cho 10 lớp \textless30 mẫu;
+train tăng lên 7.035 \\
+Bộ phân loại & SVC kernel=linear, C=0,1, class\_weight=None \\
+Metric chính & Macro F1 \\
+Final result & Accuracy 96,12\%; Macro F1 96,29\%; Macro Recall
+95,62\% \\
+Inference & 1,52 ms/ảnh ở bước classifier trên đặc trưng đã xử lý \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng A1. Bộ tham số cuối cùng được sử dụng trong báo cáo.}\end{center}
+
+\section{PHỤ LỤC B. BẢNG KIỂM SOÁT TÍNH NHẤT
+QUÁN}\label{phux1ee5-lux1ee5c-b.-bux1ea3ng-kiux1ec3m-souxe1t-tuxednh-nhux1ea5t-quuxe1n}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Mục kiểm tra}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Giá trị chuẩn}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Ghi chú}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Final Macro F1 & 96,29\% & Dùng thống nhất trong Tóm tắt, Kết quả và Kết
+luận \\
+Final Accuracy & 96,12\% & Không nhầm với 96,24\% của Phase 1 \\
+Final Macro Recall & 95,62\% & Cải thiện +1,23 điểm phần trăm so với
+Phase 1 \\
+Classifier inference & 1,52 ms/ảnh & Không ghi là end-to-end latency \\
+PCA dimension & 571 & Vector final sau PCA ở pipeline cuối \\
+Feature dimension & 1.812 & Theo artifact M04; cần audit code nếu công
+bố decomposition \\
+Lớp hiếm & 10 lớp \textless30 ảnh & Không khẳng định tất cả đều đạt
+100\% \\
+Final model & SVC linear, C=0,1, class\_weight=None & Cấu hình chốt
+M06 \\
+Test protocol & Đã quan sát ở nhiều artifact & Không mô tả là blind
+one-shot tuyệt đối \\
+\end{longtable}
+
+\begin{center}\small\textit{Bảng B1. Các giá trị cần giữ nhất quán khi chỉnh sửa hoặc trình bày.}\end{center}
+
+\section{PHỤ LỤC C. ARTIFACT NỘI BỘ PHỤC VỤ TÁI
+LẬP}\label{phux1ee5-lux1ee5c-c.-artifact-nux1ed9i-bux1ed9-phux1ee5c-vux1ee5-tuxe1i-lux1eadp}
+
+Các đường dẫn dưới đây là artifact nội bộ của repository, không thay thế
+tài liệu tham khảo học thuật nhưng cần được lưu để truy vết số liệu:
+
+\begin{itemize}
+\item
+  \path{paper/result/report_new/R01_26.07.05_report-phase1-new.md}
+\item
+  \path{paper/result/report_new/R02_26.07.12_report-phase2-new.md}
+\item
+  \path{paper/mission/phase3_new/M07_26-07-12_master_handover_document_for_paper_writing.md}
+\item
+  \path{paper/workspace/TruongDT/phase2_new/outputs/M05_ml_models_comparison_results.csv}
+\item
+  \path{paper/workspace/KietBA/phase2_new/outputs/M06_svm_finetuning_results.csv}
+\item
+  \path{paper/workspace/KietBA/phase2_new/outputs/M06_final_test_summary.csv}
+\end{itemize}
+
+\subsection{C.1. Checklist tái lập trước khi
+nộp}\label{c.1.-checklist-tuxe1i-lux1eadp-trux1b0ux1edbc-khi-nux1ed9p}
+
+\begin{itemize}
+\item
+  Lưu requirements.txt hoặc environment.yml kèm phiên bản Python và thư
+  viện.
+\item
+  Lưu random seed, cách chia dữ liệu và hash của các file
+  metadata/split.
+\item
+  Lưu model, StandardScaler, PCA và cấu hình feature extraction theo
+  cùng một version.
+\item
+  Lưu command hoặc notebook dùng để tạo từng bảng kết quả trong báo cáo.
+\item
+  Chạy lại pipeline từ dữ liệu đầu vào đến metric cuối trên một môi
+  trường sạch.
+\item
+  Đối chiếu số chiều HOG thực tế với artifact 1.812 trước khi công bố
+  decomposition.
+\end{itemize}
+
+\end{document}
