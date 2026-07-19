@@ -22,6 +22,8 @@ Kết quả khảo sát ban đầu trên 14 cấu hình phương pháp trích xu
 
 > *(Lưu ý: Các phương pháp thuộc Phase 2 như Edge Histogram 58.75%, Gabor 58.74%, LBP 30.74%, Hu Moments 25.11% đã chính thức bị loại bỏ theo `LOG-01`).*
 
+![alt text](../../workspace/NguyenLK/phase_old/output/phase1_results_visualization_english.png)
+
 ---
 
 ## 2. CHẨN ĐOÁN CÁC ĐIỂM NGHẼN CỐT LÕI (BOTTLENECK DIAGNOSIS)
